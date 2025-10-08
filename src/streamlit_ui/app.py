@@ -199,7 +199,7 @@ def process_video(input_path: str, output_path: str, conf: float, iou: float, im
 # ------------------------------------------------------------
 # UI
 # ------------------------------------------------------------
-st.set_page_config(page_title="Detector de Parqueaderos (YOLOv8)", page_icon="🅿️", layout="wide")
+st.set_page_config(page_title="Detector de Parqueaderos", page_icon="🅿️", layout="wide")
 
 st.title("🅿️ Detector de Parqueaderos")
 #st.caption(f"Modelo: `{Path(MODEL_PATH).name}` | Clases: {NAMES}  | empty={IDX_EMPTY}, occupied={IDX_OCC}")
