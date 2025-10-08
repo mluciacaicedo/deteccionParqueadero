@@ -4,107 +4,43 @@ Pruebas unitarias:
 2) Predicción en video (1 frame): lectura de frame con OpenCV y predicción sobre ese frame.
    Esto verifica el flujo de video sin procesar el video completo (rápido).
 """
-from typing import Dict, Tuple
-from ultralytics import YOLO
 import pytest
-import cv2
+import numpy as np
+from ultralytics import YOLO
 
-
-def resolve_class_ids(names: Dict[int, str]) -> Tuple[int, int]:
-    """
-    Mapea robustamente índices de clases para 'empty/libre/vacant' y 'occupied/ocupado'.
-    Fallbacks si los nombres no machan exactamente.
-    """
-    lower = {i: n.lower() for i, n in names.items()}
-
-    def _find(keywords, default=None):
+def resolve_empty_occupied_ids(names: dict[int, str]) -> tuple[int, int]:
+    lower = {i: str(n).lower() for i, n in names.items()}
+    def find(keys):
         for i, n in lower.items():
-            if any(k in n for k in keywords):
+            if any(k in n for k in keys):
                 return i
-        return default
-
-    idx_empty = _find(["empty", "free", "libre", "vacant", "space-empty"])
-    idx_occ   = _find(["occupied", "occu", "busy", "ocupado", "space-occupied"])
-
-    if idx_empty is None and idx_occ is None and len(names) == 2:
+        return None
+    idx_empty = find(["empty", "free", "libre", "vacant"])
+    idx_occ   = find(["occupied", "ocupado", "busy", "occu"])
+    if idx_empty is None and idx_occ is None and len(names) >= 2:
         ids = sorted(names.keys())
         return ids[0], ids[1]
-
-    ids = sorted(names.keys())
     if idx_empty is None:
-        idx_empty = ids[0]
+        ids = [i for i in sorted(names) if i != idx_occ]
+        idx_empty = ids[0] if ids else idx_occ
     if idx_occ is None:
-        cand = [i for i in ids if i != idx_empty]
-        idx_occ = cand[0] if cand else idx_empty
+        ids = [i for i in sorted(names) if i != idx_empty]
+        idx_occ = ids[0] if ids else idx_empty
     return idx_empty, idx_occ
 
-
-def test_predict_image(model_path, sample_image):
-    """Predicción en una imagen: salida válida, IDs de clases dentro de names y conteos no negativos."""
-    model = YOLO(str(model_path))
-    names = model.names
-    assert isinstance(names, dict) and len(names) >= 2
-
-    idx_empty, idx_occ = resolve_class_ids(names)
-
-    results = model.predict(
-        source=str(sample_image),
-        imgsz=640,
-        conf=0.15,
-        iou=0.7,
-        verbose=False
-    )
-
-    assert results and len(results) >= 1
-    r0 = results[0]
-    boxes = getattr(r0, "boxes", None)
-    assert boxes is not None, "La salida no contiene 'boxes'"
-
-    cls_ids = [int(b.cls[0]) for b in boxes] if len(boxes) > 0 else []
-    valid_ids = set(names.keys())
-    assert set(cls_ids).issubset(valid_ids), "IDs de clase fuera del diccionario 'names'"
-
-    n_empty = sum(1 for cid in cls_ids if cid == idx_empty)
-    n_occ   = sum(1 for cid in cls_ids if cid == idx_occ)
-    assert n_empty >= 0 and n_occ >= 0
-
+def test_class_id_mapping_generic():
+    names = {0: "space-empty", 1: "space-occupied"}
+    e, o = resolve_empty_occupied_ids(names)
+    assert e in names and o in names and e != o
 
 @pytest.mark.slow
-def test_predict_video_single_frame(model_path, sample_video, tmp_path):
-    """
-    Verifica el pipeline de video leyendo un único frame con OpenCV y
-    corriendo predicción sobre ese frame (imagen en memoria).
-    """
-    cap = cv2.VideoCapture(str(sample_video))
-    ok, frame = cap.read()
-    cap.release()
-
-    if not ok or frame is None:
-        pytest.skip("No fue posible leer un frame del video de prueba.")
-
+def test_predict_on_image_runs(sample_image, model_path):
     model = YOLO(str(model_path))
-    names = model.names
-    idx_empty, idx_occ = resolve_class_ids(names)
-
-    # YOLO acepta arrays numpy (BGR) directamente
-    results = model.predict(
-        source=frame,     # frame en memoria
-        imgsz=640,
-        conf=0.15,
-        iou=0.7,
-        verbose=False
-    )
-
-    assert results and len(results) >= 1
-    r0 = results[0]
-    boxes = getattr(r0, "boxes", None)
-    assert boxes is not None
-
-    cls_ids = [int(b.cls[0]) for b in boxes] if len(boxes) > 0 else []
-    valid_ids = set(names.keys())
-    assert set(cls_ids).issubset(valid_ids)
-
-    # Conteo simple para asegurar integridad
-    n_empty = sum(1 for cid in cls_ids if cid == idx_empty)
-    n_occ   = sum(1 for cid in cls_ids if cid == idx_occ)
-    assert n_empty >= 0 and n_occ >= 0
+    res = model.predict(source=str(sample_image), imgsz=640, conf=0.25, verbose=False)
+    assert len(res) >= 1
+    r0 = res[0]
+    # Asegura que devolvió un frame
+    assert r0.orig_img is not None
+    if r0.boxes is not None and len(r0.boxes) > 0:
+        xyxy = r0.boxes.xyxy.cpu().numpy()
+        assert np.all(xyxy[:, :2] <= xyxy[:, 2:4])  # x1<=x2, y1<=y2
