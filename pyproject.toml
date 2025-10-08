@@ -1,7 +1,6 @@
 # pyproject.toml
 # Definición mínima para construir e instalar los scripts del proyecto.
 
------------------
 [build-system]
 requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
