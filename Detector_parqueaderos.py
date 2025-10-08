@@ -17,13 +17,12 @@ def main():
     if not app_path.exists():
         raise FileNotFoundError(f"No se encontró la app de Streamlit en: {app_path}")
 
-    # Modelo por defecto si el usuario no define MODEL_PATH
+    # Modelo por defecto si no se define MODEL_PATH
     default_model = (repo_root / "models" / "Modelo_yolov8_pklot2.pt").resolve()
 
     env = os.environ.copy()
     env.setdefault("MODEL_PATH", str(default_model))
 
-    # Puedes cambiar puerto/headless si quieres
     cmd = [
         sys.executable, "-m", "streamlit", "run", str(app_path),
         "--server.port=8501",

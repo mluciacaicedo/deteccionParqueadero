@@ -24,9 +24,5 @@ runs/
 reports/figures/*.png
 reports/figures/*.jpg
 
-# Modelos: los manejaremos con Git LFS
-# (los .pt NO se ignorarán para que LFS los rastree)
-# Si quieres ignorar otros binarios grandes, añádelos aquí:
-
 # Streamlit cache
 .streamlit/

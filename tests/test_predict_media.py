@@ -1,8 +1,7 @@
 """
-Pruebas verbosas:
+Pruebas unitarias:
   - Resolución robusta de IDs para 'libre' y 'ocupado'
   - Predicción sobre imagen con conteo por clase
-Ver los prints con: python -m pytest -vv -s
 """
 
 from __future__ import annotations
@@ -14,7 +13,7 @@ import pytest
 from ultralytics import YOLO
 
 
-# ----------------- helpers (mismos que usas en la app) -----------------
+# ---helpers (que usa la app) -----------------
 def _normalize_class_map(names: Dict[int, str]) -> Dict[int, str]:
     return {i: str(n).lower() for i, n in names.items()}
 
@@ -87,6 +86,5 @@ def test_predict_on_image_verbose(sample_image: Path, model_path: Path):
 
     print(f"[RESULT] detecciones={num}  libres={libres}  ocupadas={ocup}")
 
-    # “Smoke test”: solo verificamos que corre sin excepciones.
     assert num >= 0
 

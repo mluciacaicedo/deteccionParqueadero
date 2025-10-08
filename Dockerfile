@@ -1,6 +1,5 @@
-# ---------------------------
 # Etapa base: runtime Python
-# ---------------------------
+
 FROM python:3.12-slim
 
 # Evitar prompts interactivos y logs truncados
@@ -28,16 +27,14 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 # Copia el resto del proyecto
 COPY . /app
 
-# Variables por defecto (puedes sobreescribirlas con -e en docker run)
-# Cambia la ruta si cambias de modelo
+# Variables por defecto
 ENV MODEL_PATH="models/Modelo_yolov8_pklot2.pt" \ 
     MLFLOW_TRACKING_URI="file:///app/mlruns"
 
 # Streamlit: correr en 0.0.0.0 y puerto 8501 dentro del contenedor
 EXPOSE 8501
 
-# Evita que Streamlit necesite carpeta de config local
-# y arranca la app directamente
+# Evita que Streamlit necesite carpeta de config local, y arranca la app directamente
 CMD ["streamlit", "run", "app.py", \
      "--server.address=0.0.0.0", "--server.port=8501", \
      "--server.headless=true"]

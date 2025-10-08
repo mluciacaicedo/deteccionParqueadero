@@ -1,6 +1,4 @@
 """
-predict_video.py
-----------------
 Inferencia de video con YOLOv8 (Ultralytics) para conteo de plazas de parqueo.
 
 - Acepta archivo de video o webcam.
@@ -8,11 +6,6 @@ Inferencia de video con YOLOv8 (Ultralytics) para conteo de plazas de parqueo.
 - Cuenta por frame clases "libres" y "ocupadas" detectándolas por nombre
   (funciona con nombres como: empty/free/libre/vacant y occupied/ocupado/busy).
 
-Uso:
-  python predict_video.py --source path/a/video.mp4 --model models/Modelo_yolov8_pklot2.pt --save out.mp4 --show
-  python predict_video.py --source 0 --show        # webcam
-
-Requisitos: ultralytics, opencv-python
 """
 
 from __future__ import annotations

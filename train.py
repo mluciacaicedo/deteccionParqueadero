@@ -46,7 +46,7 @@ def main() -> None:
     img_size = int(os.getenv("IMG_SIZE", "640"))
     exp_name = os.getenv("EXP_NAME", "train_pklot")
 
-    # ------------------------- MLflow (opcional) ---------------------------
+    # ------------------------- MLflow ---------------------------
     mlflow_uri = os.getenv("MLFLOW_TRACKING_URI", _default_mlflow_uri())
     os.environ["MLFLOW_TRACKING_URI"] = mlflow_uri  # Ultralytics lo lee internamente
 
@@ -72,8 +72,8 @@ def main() -> None:
     model = YOLO(model_path)
 
     # Nota: Ultralytics detecta MLflow y loggea automáticamente si está disponible.
-    # Si alguna vez quieres desactivar MLflow sin tocar el código:
-    #   yolo settings mlflow=False
+    # Si se quiere desactivar MLflow: yolo settings mlflow=False
+    
     model.train(
         data=data_yaml,
         epochs=epochs,

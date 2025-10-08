@@ -3,9 +3,8 @@ Lanza la interfaz de MLflow UI apuntando al directorio de runs (/mlruns).
 
 Uso:
   python start_mlflow_ui.py
-  python start_mlflow_ui.py --backend-uri file:///D:/Proyecto_FINAL_Repositorio/mlruns --port 5000 --host 127.0.0.1
-  # O con entry point:
-  start-mlflow-ui --port 5000
+  port 5000 --host 127.0.0.1
+  # O con entry point: start-mlflow-ui --port 5000
 """
 
 from __future__ import annotations
