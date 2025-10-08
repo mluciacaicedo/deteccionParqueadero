@@ -1,34 +1,28 @@
 """
-Fixtures compartidas para pruebas de inferencia con YOLOv8.
-- Modelo por defecto: models/Modelo_yolov8_pklot2.pt
-- Permite override con la variable de entorno MODEL_PATH.
-- Busca una imagen y un video de ejemplo o usa TEST_IMAGE / TEST_VIDEO.
+Fixtures y utilidades compartidas para las pruebas.
+Ejecuta las pruebas con:  python -m pytest -vv -s
 """
-import os
+
 from pathlib import Path
+import os
 import pytest
 
-@pytest.fixture(scope="session")
-def repo_root() -> Path:
-    return Path(__file__).resolve().parents[1]
+REPO = Path(__file__).resolve().parents[1]
+DEFAULT_MODEL = REPO / "models" / "Modelo_yolov8_pklot2.pt"
+DEFAULT_IMAGE = REPO /  ".\data\external\parqueadero_test.jpg"  # seleccionar imagen
 
 @pytest.fixture(scope="session")
-def sample_image(repo_root: Path) -> Path:
-    
-    img = repo_root / "bus.jpg"
+def model_path() -> Path:
+    p = Path(os.getenv("MODEL_PATH", DEFAULT_MODEL))
+    if not p.exists():
+        pytest.skip(f"Modelo no encontrado: {p}")
+    print(f"[SETUP] Modelo: {p}")
+    return p
+
+@pytest.fixture(scope="session")
+def sample_image() -> Path:
+    img = Path(os.getenv("TEST_IMAGE", DEFAULT_IMAGE))
     if not img.exists():
-        pytest.skip("No hay imagen de prueba 'bus.jpg'")
+        pytest.skip(f"Imagen de prueba no encontrada: {img}")
+    print(f"[SETUP] Imagen: {img}")
     return img
-
-@pytest.fixture(scope="session")
-def model_path(repo_root: Path) -> Path:
-    # Usa tu modelo entrenado
-    candidates = [
-        Path(os.getenv("MODEL_PATH", "")),
-        repo_root / "models" / "Modelo_yolov8_pklot2.pt",
-        repo_root / "models" / "yolov8n.pt",
-    ]
-    for p in candidates:
-        if p and Path(p).exists():
-            return Path(p)
-    pytest.skip("No hay pesos .pt disponibles para pruebas lentas")
