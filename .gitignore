@@ -1,0 +1,7 @@
+# Python-generated files
+.venv/
+__pycache__/
+*.pyc
+mlruns/
+runs/
+.DS_Store

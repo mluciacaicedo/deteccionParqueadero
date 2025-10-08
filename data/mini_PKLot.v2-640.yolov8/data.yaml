@@ -1,0 +1,6 @@
+# Auto-generado para YOLOv8 (subset)
+train: images/train
+val: images/val
+
+nc: 2
+names: ['space-empty', 'space-occupied']
