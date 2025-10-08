@@ -1,5 +1,4 @@
 # pyproject.toml
-# Definición mínima para construir e instalar los scripts del proyecto.
 
 [build-system]
 requires = ["setuptools>=61"]
@@ -13,30 +12,21 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
 
-# Si quieres incluir dependencias al instalar con `pip install .`, descomenta:
-# dependencies = [
-#   "ultralytics==8.3.205",
-#   "opencv-python==4.12.0.88",
-#   "streamlit>=1.50.0",
-#   "mlflow==2.16.2"
-# ]
-
 [project.urls]
-Homepage = "https://github.com/tu-usuario/tu-repo"
-Issues   = "https://github.com/tu-usuario/tu-repo/issues"
+Homepage = "https://github.com/mluciacaicedo/deteccionParqueadero"
+Issues = "https://github.com/mluciacaicedo/deteccionParqueadero/issues"
 
 [project.scripts]
-predict-video   = "predict_video:main"
+predict-video = "predict_video:main"
 start-mlflow-ui = "start_mlflow_ui:main"
-# app = "src.streamlit_ui.app:main"  # si defines una función main()
-
-[tool.setuptools]
-py-modules = ["predict_video", "start_mlflow_ui"]
 
 [tool.pytest.ini_options]
 minversion = "7.0"
 testpaths = ["tests"]
 addopts = "-q"
+markers = [
+  "slow: pruebas lentas que pueden usar el modelo (úsalo con -m 'not slow' para omitir)"
+]
 
 [tool.black]
 line-length = 100
