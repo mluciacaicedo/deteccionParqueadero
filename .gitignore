@@ -1,7 +1,32 @@
-# Python-generated files
-.venv/
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+.env
+.python-version
+
+# IDE/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Datos pesados (no versionar)
+data/
+!data/README.md
+
+# Experimentos y salidas
 mlruns/
 runs/
-.DS_Store
+reports/figures/*.png
+reports/figures/*.jpg
+
+# Modelos: los manejaremos con Git LFS
+# (los .pt NO se ignorarán para que LFS los rastree)
+# Si quieres ignorar otros binarios grandes, añádelos aquí:
+
+# Streamlit cache
+.streamlit/

@@ -36,6 +36,7 @@ def _default_mlflow_uri() -> str:
 
 def main() -> None:
     """Punto de entrada principal: configura MLflow, carga YOLO y entrena."""
+    
     # ---------------- Configuración por variables de entorno ----------------
     model_path = os.getenv("MODEL_PATH", "models/yolov8n.pt")
     data_yaml = os.getenv("DATA_YAML", "data/mini_PKLot.v2-640.yolov8/data.yaml")

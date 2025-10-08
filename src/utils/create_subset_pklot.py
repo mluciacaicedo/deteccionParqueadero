@@ -1,6 +1,4 @@
 """
-create_subset_pklot.py
-
 Crea un subconjunto balanceado del dataset PKLot (formato Roboflow YOLOv8):
 - Acepta múltiples extensiones de imagen (.jpg, .jpeg, .png, .bmp, .webp).
 - Detecta clases automáticamente desde data.yaml (o desde los .txt si no hay yaml).
@@ -172,10 +170,10 @@ def main():
         (out_base / "labels" / split).mkdir(parents=True, exist_ok=True)
 
     # Recolectar pares por clase
-    print("🔍 Escaneando dataset...")
+    print("Escaneando dataset...")
     pairs_by_class, class_ids, class_names = collect_pairs(root, args.splits)
-    print(f"✅ Clases detectadas (ids): {class_ids}")
-    print(f"🏷️  Nombres: {class_names}")
+    print(f"Clases detectadas (ids): {class_ids}")
+    print(f"Nombres: {class_names}")
 
     # Construir subconjunto balanceado (hasta per-class por id)
     selected: List[Tuple[Path, Path]] = []
