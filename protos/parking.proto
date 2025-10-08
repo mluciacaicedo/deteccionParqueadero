@@ -2,13 +2,13 @@ syntax = "proto3";
 package parking;
 
 service ParkingDetector {
-  rpc Predict(PredictRequest) returns (PredictResponse) {}
+  rpc Predict (ImageRequest) returns (PredictResponse) {}
 }
 
-message PredictRequest {
-  bytes image = 1;   // JPEG/PNG bytes
-  float conf  = 2;   // 0..1
-  int32 imgsz = 3;   // ej. 640
+message ImageRequest {
+  bytes image = 1;      // JPEG bytes
+  float conf  = 2;      // threshold
+  int32 imgsz = 3;      // e.g. 640
 }
 
 message Box {
@@ -22,8 +22,8 @@ message Box {
 }
 
 message PredictResponse {
-  repeated Box boxes     = 1;
-  int32 free_count       = 2;
-  int32 occupied_count   = 3;
-  bytes annotated        = 4; // JPG con overlays
+  repeated Box boxes = 1;
+  int32 free_count = 2;
+  int32 occupied_count = 3;
+  bytes annotated = 4; // JPEG con overlays
 }

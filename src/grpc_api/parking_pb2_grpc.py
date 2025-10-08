@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-from src.grpc_api import parking_pb2 as parking__pb2
+from . import parking_pb2 as parking__pb2
 
 GRPC_GENERATED_VERSION = '1.75.1'
 GRPC_VERSION = grpc.__version__
@@ -36,7 +36,7 @@ class ParkingDetectorStub(object):
         """
         self.Predict = channel.unary_unary(
                 '/parking.ParkingDetector/Predict',
-                request_serializer=parking__pb2.PredictRequest.SerializeToString,
+                request_serializer=parking__pb2.ImageRequest.SerializeToString,
                 response_deserializer=parking__pb2.PredictResponse.FromString,
                 _registered_method=True)
 
@@ -55,7 +55,7 @@ def add_ParkingDetectorServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Predict': grpc.unary_unary_rpc_method_handler(
                     servicer.Predict,
-                    request_deserializer=parking__pb2.PredictRequest.FromString,
+                    request_deserializer=parking__pb2.ImageRequest.FromString,
                     response_serializer=parking__pb2.PredictResponse.SerializeToString,
             ),
     }
@@ -84,7 +84,7 @@ class ParkingDetector(object):
             request,
             target,
             '/parking.ParkingDetector/Predict',
-            parking__pb2.PredictRequest.SerializeToString,
+            parking__pb2.ImageRequest.SerializeToString,
             parking__pb2.PredictResponse.FromString,
             options,
             channel_credentials,

@@ -24,19 +24,19 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rparking.proto\x12\x07parking\"<\n\x0ePredictRequest\x12\r\n\x05image\x18\x01 \x01(\x0c\x12\x0c\n\x04\x63onf\x18\x02 \x01(\x02\x12\r\n\x05imgsz\x18\x03 \x01(\x05\"^\n\x03\x42ox\x12\n\n\x02x1\x18\x01 \x01(\x02\x12\n\n\x02y1\x18\x02 \x01(\x02\x12\n\n\x02x2\x18\x03 \x01(\x02\x12\n\n\x02y2\x18\x04 \x01(\x02\x12\x0b\n\x03\x63ls\x18\x05 \x01(\x05\x12\x0c\n\x04\x63onf\x18\x06 \x01(\x02\x12\x0c\n\x04name\x18\x07 \x01(\t\"m\n\x0fPredictResponse\x12\x1b\n\x05\x62oxes\x18\x01 \x03(\x0b\x32\x0c.parking.Box\x12\x12\n\nfree_count\x18\x02 \x01(\x05\x12\x16\n\x0eoccupied_count\x18\x03 \x01(\x05\x12\x11\n\tannotated\x18\x04 \x01(\x0c\x32Q\n\x0fParkingDetector\x12>\n\x07Predict\x12\x17.parking.PredictRequest\x1a\x18.parking.PredictResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rparking.proto\x12\x07parking\":\n\x0cImageRequest\x12\r\n\x05image\x18\x01 \x01(\x0c\x12\x0c\n\x04\x63onf\x18\x02 \x01(\x02\x12\r\n\x05imgsz\x18\x03 \x01(\x05\"^\n\x03\x42ox\x12\n\n\x02x1\x18\x01 \x01(\x02\x12\n\n\x02y1\x18\x02 \x01(\x02\x12\n\n\x02x2\x18\x03 \x01(\x02\x12\n\n\x02y2\x18\x04 \x01(\x02\x12\x0b\n\x03\x63ls\x18\x05 \x01(\x05\x12\x0c\n\x04\x63onf\x18\x06 \x01(\x02\x12\x0c\n\x04name\x18\x07 \x01(\t\"m\n\x0fPredictResponse\x12\x1b\n\x05\x62oxes\x18\x01 \x03(\x0b\x32\x0c.parking.Box\x12\x12\n\nfree_count\x18\x02 \x01(\x05\x12\x16\n\x0eoccupied_count\x18\x03 \x01(\x05\x12\x11\n\tannotated\x18\x04 \x01(\x0c\x32O\n\x0fParkingDetector\x12<\n\x07Predict\x12\x15.parking.ImageRequest\x1a\x18.parking.PredictResponse\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'parking_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_PREDICTREQUEST']._serialized_start=26
-  _globals['_PREDICTREQUEST']._serialized_end=86
-  _globals['_BOX']._serialized_start=88
-  _globals['_BOX']._serialized_end=182
-  _globals['_PREDICTRESPONSE']._serialized_start=184
-  _globals['_PREDICTRESPONSE']._serialized_end=293
-  _globals['_PARKINGDETECTOR']._serialized_start=295
-  _globals['_PARKINGDETECTOR']._serialized_end=376
+  _globals['_IMAGEREQUEST']._serialized_start=26
+  _globals['_IMAGEREQUEST']._serialized_end=84
+  _globals['_BOX']._serialized_start=86
+  _globals['_BOX']._serialized_end=180
+  _globals['_PREDICTRESPONSE']._serialized_start=182
+  _globals['_PREDICTRESPONSE']._serialized_end=291
+  _globals['_PARKINGDETECTOR']._serialized_start=293
+  _globals['_PARKINGDETECTOR']._serialized_end=372
 # @@protoc_insertion_point(module_scope)
