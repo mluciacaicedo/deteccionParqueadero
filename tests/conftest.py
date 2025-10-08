@@ -5,6 +5,7 @@ Ejecuta las pruebas con:  python -m pytest -vv -s
 
 from pathlib import Path
 import os
+from pathlib import Path
 import pytest
 
 REPO = Path(__file__).resolve().parents[1]
