@@ -145,9 +145,12 @@ def process_video(input_path: str, output_path: str, conf: float, iou: float, im
     h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps_in = cap.get(cv2.CAP_PROP_FPS) or 20.0
 
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-    out = cv2.VideoWriter(output_path, fourcc, fps_in, (w, h))
+    # Limitar FPS de procesamiento
+    target_fps = 5 #definir mas o menos cuadros por segundo
+    frame_skip = int(fps_in // target_fps) if fps_in > target_fps else 1
 
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    out = cv2.VideoWriter(output_path, fourcc, target_fps, (w, h))
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT) or 0)
     pbar = st.progress(0, text="Procesando video...")
     t0 = time.time()
@@ -155,10 +158,15 @@ def process_video(input_path: str, output_path: str, conf: float, iou: float, im
     sum_libre, sum_ocup, frames = 0, 0, 0
 
     try:
+        frame_id = 0
         while True:
             ret, frame = cap.read()
             if not ret:
                 break
+            #Saltar cuadros según el frame_skip
+            if frame_id % frame_skip != 0:
+                frame_id += 1
+                continue
 
             results = predict_image(frame, conf, iou, imgsz)
             annotated, libres, ocupados = draw_boxes_and_count(frame, results, IDX_EMPTY, IDX_OCC)
@@ -167,6 +175,7 @@ def process_video(input_path: str, output_path: str, conf: float, iou: float, im
             sum_libre += libres
             sum_ocup += ocupados
             frames += 1
+            frame_id += 1
 
             if total_frames > 0:
                 pbar.progress(min(frames / total_frames, 1.0))
@@ -187,22 +196,21 @@ def process_video(input_path: str, output_path: str, conf: float, iou: float, im
         "avg_ocupados": (sum_ocup / frames) if frames else 0.0,
     }
 
-
 # ------------------------------------------------------------
 # UI
 # ------------------------------------------------------------
 st.set_page_config(page_title="Detector de Parqueaderos (YOLOv8)", page_icon="🅿️", layout="wide")
 
-st.title("🅿️ Detector de Parqueaderos con YOLOv8")
-st.caption(f"Modelo: `{Path(MODEL_PATH).name}` | Clases: {NAMES}  | empty={IDX_EMPTY}, occupied={IDX_OCC}")
+st.title("🅿️ Detector de Parqueaderos")
+#st.caption(f"Modelo: `{Path(MODEL_PATH).name}` | Clases: {NAMES}  | empty={IDX_EMPTY}, occupied={IDX_OCC}")
 
 with st.sidebar:
     st.header("Parámetros")
     mode = st.radio("¿Qué deseas cargar?", ["Imagen", "Video"], index=0, horizontal=True)
-    conf = st.slider("Confidence threshold", 0.1, 0.9, 0.5, 0.05)
-    iou = st.slider("IoU (NMS)", 0.1, 0.9, 0.7, 0.05)
-    imgsz = st.select_slider("Image size (inferencia)", options=[320, 416, 512, 640, 768], value=640)
-
+    conf = st.slider("Nivel de confianza", 0.1, 0.9, 0.5, 0.05, help="Entre más alta, el modelo mostrará solo detecciones muy seguras.")
+    iou = st.slider("Nivel de superposición (IoU)", 0.1, 0.9, 0.7, 0.05, help="Controla cuánta coincidencia se permite entre las detecciones.")
+    #imgsz = st.select_slider("Calidad del procesamiento", options=[320, 416, 512, 640, 768], value=640, help="Tamaño de imagen que se usa para analizar. Mayor tamaño = más precisión, pero más lento.")
+    imgsz = 640
 if mode == "Imagen":
     st.subheader("📷 Subir imagen")
     up = st.file_uploader("Arrastra o selecciona una imagen (JPG/PNG)", type=["jpg", "jpeg", "png"])
@@ -215,14 +223,14 @@ if mode == "Imagen":
 
         col1, col2 = st.columns(2)
         with col1:
-            st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), caption="Imagen original", use_column_width=True)
+            st.image(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), caption="Imagen original", width="stretch")
 
         with st.spinner("Inferencia..."):
             results = predict_image(img_bgr, conf, iou, imgsz)
             annotated, libres, ocupados = draw_boxes_and_count(img_bgr, results, IDX_EMPTY, IDX_OCC)
 
         with col2:
-            st.image(cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB), caption="Detecciones", use_column_width=True)
+            st.image(cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB), caption="Detecciones", width="stretch")
 
         st.success(f"**Conteo** → Libres: `{libres}`  |  Ocupados: `{ocupados}`")
 
@@ -267,9 +275,3 @@ else:
                 file_name=f"predicted_{Path(upv.name).stem}.mp4",
                 mime="video/mp4",
             )
-
-st.info(
-    "Consejo: puedes sobreescribir la ruta del modelo con la variable de entorno "
-    "`MODEL_PATH`.\n\n"
-    f"Ruta por defecto resuelta: `{MODEL_PATH}`"
-)
