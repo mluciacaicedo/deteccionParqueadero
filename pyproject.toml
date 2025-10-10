@@ -11,6 +11,9 @@ description = "Detección de plazas de parqueo con YOLOv8 + demo Streamlit + MLf
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
+dependencies = [
+    "mlflow>=3.4.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/mluciacaicedo/deteccionParqueadero"
