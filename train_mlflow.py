@@ -23,7 +23,7 @@ import mlflow
 # ----------------- Configs rápidas -----------------
 MODEL_PATH = os.getenv("MODEL_PATH", "models/yolov8n.pt")
 DATA_YAML  = os.getenv("DATA_YAML", "data/mini_PKLot.v2-640.yolov8/data.yaml")
-EPOCHS     = int(os.getenv("EPOCHS", "10"))
+EPOCHS     = int(os.getenv("EPOCHS", "15"))
 BATCH      = int(os.getenv("BATCH", "8"))
 IMG_SIZE   = int(os.getenv("IMG_SIZE", "640"))
 EXP_NAME   = os.getenv("EXP_NAME", "train_pklot")
