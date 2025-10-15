@@ -33,8 +33,8 @@ DEVICE     = os.getenv("DEVICE", "cpu")  # 'cpu' o 'cuda:0'
 # Set our tracking server uri for logging
 
 # URI de tracking (si no defines HTTP, caerá a file://./mlruns)
-mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI",
-                                  "file:///" + (Path.cwd()/"mlruns").as_posix()))
+mlflow.set_tracking_uri("http://127.0.0.1:5000")
+
 
 #mlflow.set_tracking_uri(uri="http://127.0.0.1:8080") #Para usarlo debemos tener LANZADO el SERVER (mlflow server --host 127.0.0.1 --port 8080)
 
