@@ -7,6 +7,6 @@ variables:
 run_test:
     image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_VERSION-$BASE_LAYER
     before_script:
-      - apt-get update && apt-get install -y make
+      - apt-get update && apt-get install -y make libgl1 libglib2.0-0 
     script:
         - make test
