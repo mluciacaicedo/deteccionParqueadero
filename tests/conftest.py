@@ -10,7 +10,7 @@ import pytest
 
 REPO = Path(__file__).resolve().parents[1]
 DEFAULT_MODEL = REPO / "models" / "Modelo_yolov8_pklot2.pt"
-DEFAULT_IMAGE = REPO /  ".\data\external\parqueadero_test.jpg"  # seleccionar imagen
+DEFAULT_IMAGE = REPO / "data/external/parqueadero_test.jpg" #selecciona la imagen
 
 @pytest.fixture(scope="session")
 def model_path() -> Path:
