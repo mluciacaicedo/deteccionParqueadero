@@ -15,7 +15,6 @@ Para facilitar su uso y evolución, el proyecto incluye una aplicación web senc
 - Incluye un **Subconjunto de datos balanceado** extraidos del Datset original, para pruebas rapidas.
 - App web **Streamlit**: carga de **imagen** o **video**, conteo + overlays.
 - Tracking con **MLflow**: hiperparámetros, métricas y gráficos.
-- Comunicacion con **gRPC**: servidor de inferencia y cliente separados.
 - Empaquetado con **Docker**: imagen para demo web o servidor gRPC.
 - Pruebas unitarias con **Pytest**: pruebas mínimas para predicción e identificación de clases.
 
@@ -23,49 +22,46 @@ Para facilitar su uso y evolución, el proyecto incluye una aplicación web senc
 
 ## Estructura del repositorio
 
-Proyecto_FINAL_Repositorio/
+DeteccionParqueadero/
 ├─ models/
-│  ├─ Modelo_yolov8_pklot2.pt          # Modelo entrenado final (recomendado)
-│  └─ yolov8n.pt                        # Modelo base (referencia)
-├─ data/
-│  ├─ PKLot.v2-640.yolov8/              # Dataset original (Roboflow YOLO)
-│  └─ mini_PKLot.v2-640.yolov8/         # Subset balanceado generado
-│     └─ data.yaml
-├─ src/
-│  ├─ utils/
-│  │  └─ create_subset.py               # Creador de subset balanceado
-│  ├─ streamlit_ui/
-│  │  └─ app.py                         # App web (imagen/video)
-│  ├─ grpc_api/
-│  │  ├─ parking.proto                  # Contrato gRPC
-│  │  ├─ parking_pb2.py
-│  │  └─ parking_pb2_grpc.py
-│  ├─ grpc_server/
-│  │  └─ server.py                      # Servidor gRPC (inferencia YOLO)
-│  └─ grpc_client/
-│     └─ client.py                      # Cliente gRPC (envía imagen, recibe boxes)
+│  └─ Modelo_yolov8_pklot2.pt          # Modelo YOLOv8 por defecto (usado por la app)
+├─ data/                                # Datos de ejemplo / insumos opcionales
+├─ docs/                                # Documentación del proyecto, README, LICENCIAS
+├─ mlartifacts/                         # Artefactos de entrenamiento/experimentación (opcional)
+├─ mlruns/                              # Carpeta de MLflow (experimentos locales)
+├─ protos/                              # (Reservado) contratos/protos si se usan en el futuro
+├─ src/                                 # Código auxiliar (utilidades, scripts internos)
 ├─ tests/
 │  ├─ conftest.py
-│  └─ test_predict_media.py
-├─ train.py                             # Entrenamiento YOLOv8 + MLflow
-├─ predict_video.py                     # CLI para video/webcam
-├─ start_mlflow_ui.py                   # Lanza MLflow UI
-├─ requirements.txt
+│  └─ test_predict_media.py             # Pruebas (pytest)
+├─ .dockerignore
+├─ .gitignore
+├─ .gitlab-ci.yml
+├─ .python-version
+├─ app.py                               # App Streamlit principal (imagen/video)
+├─ Dockerfile                           # Imagen para desplegar la app
+├─ Makefile                             # Atajos (make cod / make test)
+├─ main.py                              # Scripts auxiliares (si aplica)
+├─ predict_video.py                     # CLI para procesar video y guardar resultado
 ├─ pyproject.toml
-├─ Dockerfile
-└─ README.md
+├─ requirements.txt
+├─ resultado_annotated.jpg              # Ejemplo de salida anotada
+├─ start_mlflow_ui.py                   # Lanza MLflow UI local
+└─ train_mlflow.py                      # Entrenamiento YOLOv8 + tracking en MLflow
 
 
 ## Instalación y ejecución:
 
 # Instalación local
-
 # 1. Clonar repositorio: 
 git clone https://github.com/mluciacaicedo/deteccionParqueadero.git
 cd deteccionParqueadero
 
 # 2.Activar Entorno
 python -m venv .venv
+  
+  # Si usas UV
+  uv venv .venv
 
 # Para Windows
 .venv\Scripts\activate
@@ -76,9 +72,8 @@ source .venv/bin/activate
 # 3. Instalacion de Dependencias
 pip install -r requirements.txt
 
-# (gRPC adicional si regeneras código)
-pip install grpcio grpcio-tools protobuf
-
+# si usas UV
+uv pip install -r requirements.txt
 
 
 ## Datasets y creación de subconjunto:
@@ -125,8 +120,8 @@ webcam: `python predict_video.py --source 0 --show`
 Esto generará predicciones que se guardan como: out.mp4
 
 # Ejecucion de la app:
- Nuestra app de Detector_parqueaderos.py, se ejecuta a traves de Streamlit ubicada en la ruta src/streamlit_ui/app.py. Para el uso de la App: ejecuta el comando: `python Detector_parqueaderos.py`
-
+ Nuestra app de Detector_parqueaderos, se ejecuta a traves de Streamlit, para su uso, 
+ ejecuta el comando: `uv run streamlit run app.py` inmediatamente se te abrirá el navegador, y podras usar la aplicacion.
 
 # Pruebas Unitarias
   - Resolución robusta de IDs para 'libre' y 'ocupado'
