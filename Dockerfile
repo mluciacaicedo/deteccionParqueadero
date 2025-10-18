@@ -22,10 +22,11 @@ COPY . .
 
 # Puerto para Streamlit
 EXPOSE 8501
+ENV STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
 
 # Comando por defecto
 #CMD ["python", "Detector_parqueaderos.py"]
 #CMD ["streamlit", "run", "Detector_parqueaderos.py", "--server.port=8501", "--server.enableCORS=false", "--server.headless=true"]
-CMD ["streamlit", "run", "Detector_parqueaderos.py", "--server.headless", "true", "--server.port", "8501", "--server.address", "0.0.0.0"]
+CMD ["streamlit","run","Detector_parqueaderos.py","--server.address","0.0.0.0","--server.port","8501","--server.headless","true"]
 
 
