@@ -29,7 +29,7 @@ def main():
         "--server.port=8501",
         "--server.headless=true",
     ]
-    
+
     print(f"Lanzando Streamlit: {' '.join(cmd)}")
     print(f"MODEL_PATH = {env['MODEL_PATH']}")
     subprocess.run(cmd, env=env, check=True)
