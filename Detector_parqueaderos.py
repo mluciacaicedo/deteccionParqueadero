@@ -25,10 +25,11 @@ def main():
 
     cmd = [
         sys.executable, "-m", "streamlit", "run", str(app_path),
+        "--server.address=0.0.0.0",
         "--server.port=8501",
         "--server.headless=true",
     ]
-
+    
     print(f"Lanzando Streamlit: {' '.join(cmd)}")
     print(f"MODEL_PATH = {env['MODEL_PATH']}")
     subprocess.run(cmd, env=env, check=True)
