@@ -12,19 +12,18 @@ __pycache__/
 .venv/
 .env
 .python-version
-
 # IDE/OS
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
-
 # Datos pesados (no versionar)
 data/
 !data/README.md
-
 # Experimentos y salidas
 mlruns/
 runs/
 reports/figures/*.png
 reports/figures/*.jpg
+# Streamlit cache
+#.streamlit/

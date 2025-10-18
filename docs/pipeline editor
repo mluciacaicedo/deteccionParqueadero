@@ -1,0 +1,58 @@
+variables:
+  UV_VERSION: "0.5"
+  PYTHON_VERSION: "3.11"
+  BASE_LAYER: bookworm-slim
+  UV_LINK_MODE: copy
+  IMAGE_NAME: joselo121/detector_parqueaderos
+  IMAGE_TAG: python.app-Detector-v1.0
+
+stages:
+  - test
+  - build
+  - deploy
+
+run_test:
+    stage: test
+    image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_VERSION-$BASE_LAYER
+    before_script:
+      - apt-get update && apt-get install -y make libgl1-mesa-glx libglib2.0-0
+    script:
+        - make test
+    cache:
+      key:
+        files:
+          - requirements.txt
+      paths:
+        - .venv/
+
+build_image:
+  stage: build
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  image: docker:29.0.0-rc.1-cli
+  services:
+    - docker:29.0.0-rc.1-dind
+  before_script:
+    - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD
+  script:
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+    - docker push $IMAGE_NAME:$IMAGE_TAG
+
+deploy:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache openssh-client
+    - chmod 400 $SSH_KEY
+
+  script:
+    - |
+      ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" root@167.71.178.3 \
+      "set -euo pipefail \
+      && REGISTRY_USER='$REGISTRY_USER' REGISTRY_PASSWORD='$REGISTRY_PASSWORD' IMAGE_NAME='$IMAGE_NAME' IMAGE_TAG='$IMAGE_TAG' CONTAINER_NAME='DetectorParqueaderos-app' \
+      && echo \"\$REGISTRY_PASSWORD\" | docker login -u \"\$REGISTRY_USER\" --password-stdin \
+      && docker pull \"\$IMAGE_NAME:\$IMAGE_TAG\" \
+      && if docker ps -a --format '{{.Names}}' | grep -Fxq \"\$CONTAINER_NAME\"; then docker rm -f \"\$CONTAINER_NAME\"; fi \
+      && docker run -d --restart unless-stopped -p 5000:8501 --name \"\$CONTAINER_NAME\" \"\$IMAGE_NAME:\$IMAGE_TAG\" \
+      && docker image prune -f"
