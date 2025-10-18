@@ -24,8 +24,5 @@ COPY . .
 EXPOSE 8501
 
 # Comando por defecto
-CMD ["python", "Detector_parqueaderos.py"]
-#CMD ["streamlit", "run", "Detector_parqueaderos.py", "--server.port=8501", "--server.enableCORS=false", "--server.headless=true"]
-#CMD ["streamlit","run","Detector_parqueaderos.py","--server.address","0.0.0.0","--server.port","8501","--server.headless","true"]
-
+CMD ["streamlit","run","app.py","--server.address","0.0.0.0","--server.port","8501","--server.headless","true"]
 

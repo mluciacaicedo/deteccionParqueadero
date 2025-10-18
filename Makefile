@@ -1,5 +1,6 @@
 cod:
-	uv run Detector_parqueaderos.py
+	uv run streamlit run app.py
+#uv run streamlit run app.py --server.address 0.0.0.0 --server.port 8501 --server.headless true
 
 .PHONY: test
 test:
