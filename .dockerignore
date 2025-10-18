@@ -1,12 +1,30 @@
+# VCS
+.git
+.gitignore
+.gitattributes
+
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.db
-*.sqlite3
-.DS_Store
+*.egg-info/
+.venv/
 .env
-.venv
+.python-version
+
+# IDE/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Datos pesados (no versionar)
+data/
+!data/README.md
+
+# Experimentos y salidas
 mlruns/
 runs/
-*.log
+reports/figures/*.png
+reports/figures/*.jpg
