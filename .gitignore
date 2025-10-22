@@ -26,3 +26,4 @@ reports/figures/*.jpg
 
 # Streamlit cache
 .streamlit/
+builds/
