@@ -24,6 +24,9 @@ run_test:
           - requirements.txt
       paths:
         - .venv/
+    rules:
+      - if: '$CI_COMMIT_BRANCH == "main"'
+      - when: manual
 
 build_image:
   stage: build
@@ -39,6 +42,9 @@ build_image:
   - echo "IMAGE_TAG=$IMAGE_TAG"
   - docker build -t $IMAGE_NAME:$IMAGE_TAG .
   - docker push $IMAGE_NAME:$IMAGE_TAG
+  rules:
+      - if: '$CI_COMMIT_BRANCH == "main"'
+      - when: manual
 
 deploy:
   stage: deploy
@@ -57,3 +63,5 @@ deploy:
       && if docker ps -a --format '{{.Names}}' | grep -Fxq \"\$CONTAINER_NAME\"; then docker rm -f \"\$CONTAINER_NAME\"; fi \
       && docker run -d --restart unless-stopped -p 5000:8501 --name \"\$CONTAINER_NAME\" \"\$IMAGE_NAME:\$IMAGE_TAG\" \
       && docker image prune -f"
+  rules:
+      - when: manual
