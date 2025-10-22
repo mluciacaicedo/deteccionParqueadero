@@ -3,7 +3,7 @@ variables:
   PYTHON_VERSION: "3.11"
   BASE_LAYER: bookworm-slim
   UV_LINK_MODE: copy
-  IMAGE_NAME: joselo121/detector_parqueaderos
+  IMAGE_NAME: mluciac/deteccionparqueadero
   IMAGE_TAG: python.app-Detector-v1.0
 
 stages:
@@ -48,7 +48,7 @@ deploy:
 
   script:
     - |
-      ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" root@167.71.178.3 \
+      ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" root@157.245.15.222 \
       "set -euo pipefail \
       && REGISTRY_USER='$REGISTRY_USER' REGISTRY_PASSWORD='$REGISTRY_PASSWORD' IMAGE_NAME='$IMAGE_NAME' IMAGE_TAG='$IMAGE_TAG' CONTAINER_NAME='DetectorParqueaderos-app' \
       && echo \"\$REGISTRY_PASSWORD\" | docker login -u \"\$REGISTRY_USER\" --password-stdin \
