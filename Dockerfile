@@ -25,4 +25,3 @@ EXPOSE 8501
 
 # Comando por defecto
 CMD ["streamlit","run","app.py","--server.address","0.0.0.0","--server.port","8501","--server.headless","true"]
-
